@@ -14,5 +14,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
 
 RUN a2ensite self-service-password && a2dissite 000-default
 
+COPY 99-self-service-password /usr/local/preinit/
+
 # expose only apache HTTP port
 EXPOSE 80
