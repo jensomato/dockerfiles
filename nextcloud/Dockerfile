@@ -1,7 +1,5 @@
-FROM nextcloud:apache
+FROM nextcloud:12.0.4-apache
 MAINTAINER Jens Dürr <dev-dockerhub@jensomato.de>
-
-ENV NEXTCLOUD_VERSION 12.0.4
 
 RUN echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list \
     && apt-get update && apt-get install -y \
@@ -19,8 +17,8 @@ RUN echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/so
     && pecl install imagick smbclient \
     && docker-php-ext-enable imagick smbclient \
     && mkdir /var/log/supervisord /var/run/supervisord \
-    && echo "*/15 * * * * su - www-data -s /bin/bash -c \"php -f /var/www/html/cron.php\""| crontab -
-    && echo "*/30 * * * * su - www-data -s /bin/bash -c \"php -f /var/www/html/occ.php preview:pre-generate\""| crontab -
+    && echo "*/15 * * * * su - www-data -s /bin/bash -c \"php -f /var/www/html/cron.php\""| crontab - \
+    && (crontab -l ; echo "*/30 * * * * su - www-data -s /bin/bash -c \"/var/www/html/occ preview:pre-generate\"")| crontab -
 
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 
