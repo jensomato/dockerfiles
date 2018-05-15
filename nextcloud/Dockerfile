@@ -17,7 +17,7 @@ RUN echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/so
     && pecl install imagick smbclient \
     && docker-php-ext-enable imagick smbclient \
     && mkdir /var/log/supervisord /var/run/supervisord \
-    && echo 'memory_limit=512' >> /usr/local/etc/php/conf.d/opcache-recommended.ini \
+    && echo 'memory_limit=512M' >> /usr/local/etc/php/conf.d/opcache-recommended.ini \
     && (crontab -l ; echo "*/30 * * * * su - www-data -s /bin/bash -c \"/var/www/html/occ preview:pre-generate\"")| crontab -
 
 COPY supervisord.conf /etc/supervisor/supervisord.conf
