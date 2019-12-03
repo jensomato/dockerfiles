@@ -1,0 +1,24 @@
+#!/bin/bash -eu
+
+CONFIG=${1-"/etc/aria2/aria2.conf"}
+
+replace () {
+  echo "setting $1 to $2"
+  sed -i "/^$1=/s/=.*/=$2/g" $CONFIG
+
+}
+
+touch /etc/aria2/session.lock
+
+addgroup --gid $GID aria2
+adduser --uid $UID --ingroup aria2 --home /download --shell /bin/false --gecos "" --disabled-login aria2
+
+chown -R aria2:aria2 /download
+
+echo "Changing aria2 config $CONFIG"
+
+if [ -n "$RPC_SECRET" ]; then
+	replace 'rpc-secret' $RPC_SECRET
+fi
+
+systemctl enable aria2.service
